@@ -35,12 +35,13 @@ class NewTransactions extends StatelessWidget {
               decoration: InputDecoration(labelText: 'Amount'),
               controller: amountController,
               onSubmitted: (_) => onSubmitTransacton(),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
             ),
             TextButton(
               child: Text('Add Transaction'),
               onPressed: onSubmitTransacton,
               style: TextButton.styleFrom(
-                primary: Colors.purple,
+                primary: Colors.deepPurpleAccent,
               ),
             ),
           ],
