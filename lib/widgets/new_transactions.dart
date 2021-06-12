@@ -47,56 +47,63 @@ class _NewTransactionsState extends State<NewTransactions> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: _textController,
-              onSubmitted: (_) => _submitTransacton(),
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
-              onSubmitted: (_) => _submitTransacton(),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-            ),
-            Container(
-              height: 75,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _selectedDate == null
-                          ? 'No Date Chosen'
-                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: Text('Choose Date'),
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _textController,
+                onSubmitted: (_) => _submitTransacton(),
               ),
-            ),
-            ElevatedButton(
-              child: Text('Add Transaction'),
-              onPressed: _submitTransacton,
-              style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
-                  textStyle: TextStyle(
-                    color: Theme.of(context).textTheme.button!.color,
-                  )),
-            ),
-          ],
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                onSubmitted: (_) => _submitTransacton(),
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+              ),
+              Container(
+                height: 75,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No Date Chosen'
+                            : 'Picked Date: ${DateFormat.yMd().format(_selectedDate!)}',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _presentDatePicker,
+                      child: Text('Choose Date'),
+                      style: TextButton.styleFrom(
+                        primary: Theme.of(context).primaryColor,
+                        textStyle: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                child: Text('Add Transaction'),
+                onPressed: _submitTransacton,
+                style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                    textStyle: TextStyle(
+                      color: Theme.of(context).textTheme.button!.color,
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );

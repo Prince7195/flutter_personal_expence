@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
 
 import './widgets/chart.dart';
 import './models/transaction.dart';
@@ -6,6 +7,13 @@ import './widgets/new_transactions.dart';
 import './widgets/transaction_list.dart';
 
 void main() {
+  // using to ensure the Widgets are loaded b4 setting Orintation.
+  // WidgetsFlutterBinding.ensureInitialized();
+  // For fixed orentation of the APP.
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitDown,
+  //   DeviceOrientation.portraitUp,
+  // ]);
   runApp(MyApp());
 }
 
@@ -63,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // ),
   ];
 
+  bool _showChart = false;
+
   List<Transaction> get _recentTransactions {
     return _transactions.where((trx) {
       return trx.date.isAfter(
@@ -105,18 +115,28 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Personal Expense'),
-        actions: [
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(
-              Icons.add,
-            ),
+    final isLanscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final appBar = AppBar(
+      title: Text('Personal Expense'),
+      actions: [
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(
+            Icons.add,
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+    final trxWidget = Container(
+      height: (MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              appBar.preferredSize.height) *
+          0.7,
+      child: TransactionList(_transactions, _removeTransaction),
+    );
+    return Scaffold(
+      appBar: appBar,
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
@@ -128,8 +148,40 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Chart(_recentTransactions),
-            TransactionList(_transactions, _removeTransaction),
+            if (isLanscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Show Chart'),
+                  Switch(
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            if (!isLanscape)
+              Container(
+                height: (MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        appBar.preferredSize.height) *
+                    0.3,
+                child: Chart(_recentTransactions),
+              ),
+            if (!isLanscape) trxWidget,
+            if (isLanscape)
+              _showChart
+                  ? Container(
+                      height: (MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top -
+                              appBar.preferredSize.height) *
+                          0.7,
+                      child: Chart(_recentTransactions),
+                    )
+                  : trxWidget
           ],
         ),
       ),
